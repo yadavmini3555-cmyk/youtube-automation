@@ -3,8 +3,6 @@ name: YouTube Analytics Export
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 4 * * 1"
 
 jobs:
   analytics:
@@ -27,11 +25,4 @@ jobs:
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
         run: python scripts/analytics.py
-
-      - name: Upload report artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: youtube-analytics-report
-          path: analytics/
-          if-no-files-found: warn
-          
+        
