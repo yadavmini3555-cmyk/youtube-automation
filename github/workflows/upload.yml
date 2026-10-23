@@ -1,0 +1,32 @@
+name: YouTube Video Upload
+
+on:
+workflow_dispatch:
+push:
+paths:
+- "metadata/schedule.csv"
+
+permissions:
+contents: write
+
+jobs:
+upload:
+runs-on: ubuntu-latest
+steps:
+- name: Get repository files
+uses: actions/checkout@v4
+
+  - name: Set up Python
+    uses: actions/setup-python@v5
+    with:
+      python-version: "3.11"
+
+  - name: Install dependencies
+    run: pip install -r requirements.txt
+
+  - name: Upload video
+    env:
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+    run: python scripts/upload_video.py
