@@ -1,0 +1,24 @@
+
+name: YouTube Video Upload
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check project files
+        run: |
+          test -f scripts/upload_video.py
+          test -f metadata/schedule.csv
+          test -f requirements.txt
+          echo "Required files found."
+          echo "No video was uploaded. Configure and test credentials before enabling uploads."
+          
