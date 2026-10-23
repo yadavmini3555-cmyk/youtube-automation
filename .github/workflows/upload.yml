@@ -8,17 +8,35 @@ permissions:
   contents: write
 
 jobs:
-  validate:
+  upload:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check project files
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Upload video
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+        run: python scripts/upload_video.py
+
+      - name: Save upload record
         run: |
-          test -f scripts/upload_video.py
-          test -f metadata/schedule.csv
-          test -f requirements.txt
-          echo "Required files found."
-          echo "No video was uploaded. Configure and test credentials before enabling uploads."
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add metadata/schedule.csv metadata/uploaded.csv
+          if ! git diff --cached --quiet; then
+            git commit -m "Record YouTube video upload"
+            git push
+          fi
           
