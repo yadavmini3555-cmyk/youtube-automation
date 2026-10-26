@@ -2,7 +2,7 @@
 name: YouTube Video Upload
 
 on:
-  workflow_dispatch: 
+  workflow_dispatch:
   schedule:
     - cron: '30 3 * * *'
 
@@ -20,10 +20,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Check video schedule
+        run: |
+          echo "Checking scheduled videos..."
+          cat metadata/schedule.csv
+          test -f scripts/upload_video.py
 
       - name: Upload video
         env:
@@ -41,4 +47,3 @@ jobs:
             git commit -m "Record YouTube video upload"
             git push
           fi
-          
