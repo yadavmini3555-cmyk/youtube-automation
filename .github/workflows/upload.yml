@@ -3,7 +3,7 @@ name: YouTube Video Upload
 
 on:
   workflow_dispatch: 
-schedule:
+  schedule:
     - cron: '30 3 * * *'
 
 permissions:
