@@ -2,7 +2,9 @@
 name: YouTube Video Upload
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: 
+schedule:
+    - cron: '30 3 * * *'
 
 permissions:
   contents: write
